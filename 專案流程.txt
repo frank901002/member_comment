@@ -1,0 +1,42 @@
+初始化專案 npm init -y
+安裝第三方模組 npm install express
+安裝樣板引擎 npm install ejs
+安裝Session，做使用者狀態管理 npm install express-session 
+安裝mongodb資料庫模組 npm install mongodb
+
+建立index.js:
+//建立資料庫連線
+const mongo=require("mongodb")
+const uri="資料庫連線網址"
+const client=new mongo.MongoClient(uri, {useNewUrlParser:true, useUnifiedTopology:true})
+let db=null
+async function initDB(){
+	await client.connect()
+	console.log("連線成功")
+	db=client.db("資料庫名稱")
+	// 後續的資料庫操作
+}
+initDB()
+
+//建立網站伺服器基礎設定
+const express=require("express")
+const app = express()
+const session = require("express-session")
+app.use(session({
+    secret:"anything",
+    resave:"false",
+    saveUninitialized:true
+}))
+app.set("view engine","ejs")
+app.set("views","./views")
+app.use(express.static("public"))
+app.use(express.urlencoded({extended:true}))
+//建立需要的路由
+app.get("",function(req,res){
+})
+//啟動伺服器在 http://localhost:3000/
+app.listen(3000,function(){
+    console.log("Server Started")
+})
+
+建立views資料夾，並在底下建立index.ejs
